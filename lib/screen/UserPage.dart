@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserPage extends StatelessWidget {
   final String userId;
@@ -22,7 +23,12 @@ class UserPage extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 
-          final userProfile = snapshot.data;
+          // تحقق من أن snapshot.data ليس null
+          final userProfile = snapshot.data as Map<String, dynamic>?;
+
+          if (userProfile == null) {
+            return Center(child: Text('User profile not found'));
+          }
 
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -31,8 +37,8 @@ class UserPage extends StatelessWidget {
                 radius: 50,
                 backgroundImage: NetworkImage(userProfile['avatar_url'] ?? ''),
               ),
-              Text('Username: ${userProfile['username']}'),
-              Text('Email: ${userProfile['useremail']}'),
+              Text('Username: ${userProfile['username'] ?? 'N/A'}'),
+              Text('Email: ${userProfile['useremail'] ?? 'N/A'}'),
             ],
           );
         },
